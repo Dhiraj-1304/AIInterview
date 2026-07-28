@@ -56,6 +56,13 @@ export const registerUser = async (req, res) => {
   }
 };
 
+
+/**
+ * @name loginUser
+ * @description Login User to the server
+ * @route /api/auth/login
+ * @access public
+ */
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -87,12 +94,18 @@ export const loginUser = async (req, res) => {
   
 };
 
+/**
+ * @name logoutUser
+ * @description It is create to logout the user
+ * @route /api/auth/logout
+ * @access public
+ */
+
 export const logoutUser = async (req, res) => {
   try{
     const token = req.cookies.token;
     if(token){
-      const blackListToken = new blackListModel({ token });
-      await blackListToken.save();
+       await blackListModel.create({token})
       res.clearCookie("token");
       res.status(200).json({ message: "User logged out successfully" });
     }
@@ -101,4 +114,24 @@ export const logoutUser = async (req, res) => {
     res.status(500).json({ message: "Internal server error", error: err.message });
   }
 }
+
+/**
+ * @name getMe 
+ * @description get the current login user detail
+ * @route /api/auth/getMe
+ * @access private
+ */
+
+export const getMe = async(req,res)=>{
+  const user = await userModel.findById(req.user.id)
+  return res.status(200).json({
+    message : "User detail fetch succesfully",
+    user :{
+      id : user._id,
+      username : user.username,
+      email : user.email
+    }
+  })
+}
+
 
