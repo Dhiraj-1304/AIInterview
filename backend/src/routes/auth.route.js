@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser } from "../controllers/user.controller.js";
+import { registerUser, loginUser, logoutUser } from "../controllers/user.controller.js";
 
 const authRouter = express.Router();
 
@@ -16,6 +16,13 @@ authRouter.post("/register", registerUser);
  * @access Public
  */
 authRouter.post("/login", loginUser);
+
+/**
+ * @route POST /api/auth/logout
+ * @description clear the cookie so that the user can logout and blacklist the token in the backend so that the user cannot access the protected routes
+ * @access Public
+ */
+authRouter.post("/logout", logoutUser);
  
 
 export default authRouter;
